@@ -404,7 +404,7 @@ footer svg{width:20px;height:20px}
 
     btn.disabled = true; btn.textContent = T[lang].sending;
     join(contact.value, sport.value).then(function (res) {
-      store('sahada_me', JSON.stringify({ contact: contact.value.trim(), sport: sport.value }));
+      store('sahada_me', JSON.stringify({ contact: contact.value.trim(), sport: sport.value, code: res.referral_code, invites: res.invites || 0 }));
       showDone(res, true);
     }).catch(function (err) {
       if (err.code === 'invalid_contact') showError('e_contact', contact);
@@ -460,10 +460,17 @@ footer svg{width:20px;height:20px}
   // Returning visitor: show their link with an up-to-date invite count.
   var me = null; try { me = JSON.parse(load('sahada_me') || 'null'); } catch (e) {}
   if (me && me.contact && me.sport) {
-    $('signup').hidden = true;  // avoid flashing the form while we look them up
+    // paint the cached link straight away, then refresh the invite count in the background
+    if (me.code) showDone({ referral_code: me.code, invites: me.invites || 0, already_joined: true }, false);
+    else $('signup').hidden = true;  // older entries without a cached code: avoid flashing the form
     join(me.contact, me.sport)
-      .then(function (res) { res.already_joined = true; showDone(res, false); })
-      .catch(function () { $('signup').hidden = false; });
+      .then(function (res) {
+        res.already_joined = true;
+        me.code = res.referral_code; me.invites = res.invites || 0;
+        store('sahada_me', JSON.stringify(me));
+        showDone(res, false);
+      })
+      .catch(function () { if (!me.code) $('signup').hidden = false; });
   }
 })();
 </script>
