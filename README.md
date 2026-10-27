@@ -4,7 +4,7 @@ Single static page (`index.html`) that writes signups to Supabase through two RP
 `join_launch_waitlist(p_contact, p_sport, p_ref, p_lang)` and `launch_waitlist_count()`.
 The table itself is not readable or writable with the public key.
 
-Live: https://heshamrahwanji.github.io/sahada-waitlist/
+Live: https://sahada.app/ (GitHub Pages custom domain; also https://heshamrahwanji.github.io/sahada-waitlist/)
 
 ## Deploy
 Hosted on GitHub Pages from the `gh-pages` branch — push to it and the site updates in about a minute.
