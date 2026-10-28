@@ -196,7 +196,7 @@ footer svg{width:20px;height:20px}
       <p class="error full" id="error" role="alert" aria-live="assertive"></p>
       <p class="consent full">
         <span data-i18n="consent">Katılarak, Sahada'nın lansmanı hakkında seninle iletişime geçmemizi kabul edersin.</span>
-        <a href="https://heshamrahwanji.github.io/sahada-legal/privacy.html" target="_blank" rel="noopener" data-i18n="privacy">Gizlilik Politikası</a>
+        <a id="privacyLink" href="https://heshamrahwanji.github.io/sahada-legal/privacy.html#bekleme-listesi" target="_blank" rel="noopener" data-i18n="privacy">Gizlilik Politikası</a>
       </p>
     </form>
 
@@ -317,6 +317,7 @@ footer svg{width:20px;height:20px}
     lang = l; store('sahada_lang', l);
     var t = T[l];
     document.documentElement.lang = l;
+    $('privacyLink').hash = l === 'en' ? 'waitlist' : 'bekleme-listesi';
     document.title = t.title;
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
       var v = t[el.getAttribute('data-i18n')];
