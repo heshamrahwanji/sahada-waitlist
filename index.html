@@ -4,238 +4,319 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Sahada — Saha bul. Maça çık.</title>
-<meta name="description" content="İstanbul'da futbol, padel ve diğer sporlar için saha kirala, maçına oyuncu bul. Bekleme listesine katıl.">
+<meta name="description" content="İstanbul'da futbol, padel ve diğer sporlar için saha kirala, maçına oyuncu bul. Sahada yakında açılıyor — bekleme listesine katıl.">
 <meta name="theme-color" content="#0A0A0A">
 <link rel="icon" type="image/png" href="favicon.png">
+<link rel="canonical" href="https://sahada.app/">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://sahada.app/">
+<meta property="og:site_name" content="Sahada">
+<meta property="og:locale" content="tr_TR">
 <meta property="og:title" content="Sahada — Saha bul. Maça çık.">
 <meta property="og:description" content="İstanbul'da saha kirala, maçına oyuncu bul. Bekleme listesine katıl.">
 <meta property="og:image" content="https://sahada.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="preload" as="image" href="aerial.webp" imagesrcset="aerial-1280.webp 1280w, aerial.webp 2688w" imagesizes="100vw" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://bjcxddyezrndswqqylvg.supabase.co" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0A0A0A;
-  --ink:#F5F5F2;
-  --muted:#9A9A95;
-  --line:#262624;
-  --field:#141413;
+  --ink:#FFFFFF;
+  --muted:rgba(255,255,255,.72);
+  --faint:rgba(255,255,255,.16);
+  --field:#141414;
   --accent:#22C55E;
-  --accent-ink:#04140A;
-  --error:#FF6B5B;
+  --accent-hover:#4ADE80;
+  --error:#FCA5A5;
+  --gutter:clamp(20px,5vw,72px);
+  --max:1240px;
 }
-*{margin:0;padding:0;box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:border-box}
+html{color-scheme:dark;-webkit-text-size-adjust:100%}
 body{
-  min-height:100svh;display:flex;flex-direction:column;
-  background:var(--bg);color:var(--ink);
-  font-family:'Archivo',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  font-size:17px;line-height:1.5;
-  padding:max(20px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom));
-  overflow-x:hidden;
+  margin:0;background:var(--bg);color:var(--ink);
+  font:500 17px/1.6 'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;
+  -webkit-font-smoothing:antialiased;
 }
-/* faint centre-circle of a pitch behind the hero */
-body::before{
-  content:"";position:fixed;z-index:-1;pointer-events:none;
-  width:min(140vw,900px);aspect-ratio:1;left:50%;top:-8%;transform:translateX(-50%);
-  border:2px solid rgba(34,197,94,.09);border-radius:50%;
-}
-.wrap{width:100%;max-width:560px;margin:0 auto;flex:1;display:flex;flex-direction:column}
-
-/* top bar: brand + language */
-.top{display:flex;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:10px}
-.brand img{width:34px;height:34px}
-.brand span{font-weight:800;font-stretch:110%;letter-spacing:.18em;font-size:.82rem}
-.lang{display:flex;border:1px solid var(--line);border-radius:999px;padding:3px}
-.lang button{
-  font:inherit;font-size:.78rem;font-weight:700;letter-spacing:.06em;
-  background:none;border:0;color:var(--muted);cursor:pointer;
-  padding:7px 12px;border-radius:999px;min-width:44px;min-height:36px;
-}
-.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
-
-/* hero */
-.hero{padding:clamp(48px,12vh,110px) 0 28px}
-h1{
-  font-weight:900;font-stretch:68%;text-transform:uppercase;
-  font-size:clamp(3.3rem,17vw,6.6rem);line-height:.86;letter-spacing:-.01em;
-}
-h1 .em{display:block;color:var(--accent)}
-.sub{margin-top:22px;color:var(--muted);font-size:1.05rem;max-width:30em}
-
-/* form */
-form{display:flex;flex-direction:column;gap:12px;margin-top:8px}
-label.vh,.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.field{
-  width:100%;font:inherit;font-size:1.05rem;color:var(--ink);
-  background:var(--field);border:1.5px solid var(--line);border-radius:14px;
-  padding:17px 16px;min-height:58px;outline:none;appearance:none;
-  transition:border-color .15s;
-}
-.field::placeholder{color:#6B6B66}
-.field:focus{border-color:var(--accent)}
-.field[aria-invalid="true"]{border-color:var(--error)}
-select.field{
-  cursor:pointer;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' fill='none'%3E%3Cpath d='M1 1.5 7 7.5l6-6' stroke='%239A9A95' stroke-width='2'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 18px center;padding-right:44px;
-}
-select.field:invalid{color:#6B6B66}
-select.field option{color:var(--ink);background:var(--field)}
-.btn{
-  font:inherit;font-weight:800;font-stretch:90%;font-size:1.1rem;letter-spacing:.02em;
-  background:var(--accent);color:var(--accent-ink);border:0;border-radius:14px;
-  min-height:60px;padding:0 20px;cursor:pointer;
-  transition:transform .1s, filter .15s;
-}
-.btn:hover{filter:brightness(1.08)}
-.btn:active{transform:scale(.985)}
-.btn[disabled]{opacity:.6;cursor:progress}
+img{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
-.error{color:var(--error);font-size:.92rem;min-height:1.4em}
-.consent{color:#6B6B66;font-size:.8rem;line-height:1.45}
-.consent a{color:var(--muted)}
-.count{
-  margin-top:18px;display:flex;align-items:center;gap:10px;
-  color:var(--ink);font-weight:700;font-size:.98rem;
-}
-.dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none;
-  box-shadow:0 0 0 0 rgba(34,197,94,.6);animation:pulse 2s infinite}
-@keyframes pulse{70%{box-shadow:0 0 0 10px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
-.count b{color:var(--accent);font-variant-numeric:tabular-nums}
-
-/* thank-you */
-.done{padding-top:clamp(40px,10vh,90px)}
-.done h2{font-weight:900;font-stretch:68%;text-transform:uppercase;font-size:clamp(3rem,15vw,5.6rem);line-height:.9}
-.done h2:focus{outline:none}
-.done p{margin-top:14px;color:var(--muted);font-size:1.05rem}
-.invite{margin-top:30px;border:1.5px solid var(--line);border-radius:18px;padding:20px;background:var(--field)}
-.invite h3{font-weight:800;font-stretch:90%;font-size:1.25rem;line-height:1.2}
-.link{
-  margin-top:16px;display:flex;align-items:center;gap:8px;
-  background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:6px 6px 6px 14px;
-}
-.link code{flex:1;min-width:0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86rem;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
-.copy{font:inherit;font-weight:700;font-size:.88rem;border:0;border-radius:9px;cursor:pointer;
-  background:var(--ink);color:var(--bg);padding:10px 14px;min-height:42px;flex:none}
-.share{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.share.solo{grid-template-columns:1fr}
-.share a,.share button{
-  font:inherit;font-weight:700;font-size:.95rem;text-decoration:none;text-align:center;
-  display:flex;align-items:center;justify-content:center;min-height:52px;border-radius:12px;cursor:pointer;
-}
-.wa{background:var(--accent);color:var(--accent-ink);border:0}
-.more{background:none;color:var(--ink);border:1.5px solid var(--line)}
-.progress{margin-top:20px;display:flex;align-items:center;gap:8px}
-.progress i{width:30px;height:8px;border-radius:4px;background:var(--line)}
-.progress i.on{background:var(--accent)}
-.progress span{margin-left:6px;color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums}
-.again{margin-top:22px;background:none;border:0;color:var(--muted);font:inherit;font-size:.88rem;
-  text-decoration:underline;cursor:pointer;min-height:44px}
-
-footer{margin-top:auto;padding-top:48px;display:flex;justify-content:space-between;align-items:center;
-  color:#6B6B66;font-size:.82rem}
-footer a{display:inline-flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-weight:700;min-height:44px}
-footer svg{width:20px;height:20px}
-
 [hidden]{display:none!important}
-@media (min-width:720px){
-  body{font-size:18px}
-  form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  form .full{grid-column:1/-1}
+.accent{color:var(--accent)}
+
+/* ---------- header ---------- */
+.top{border-bottom:1px solid var(--faint)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:72px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand img{width:30px;height:30px}
+.brand span{font-weight:900;font-size:15px;letter-spacing:.32em}
+.top nav{display:flex;align-items:center;gap:20px}
+.lang{display:flex;border:1px solid var(--faint);border-radius:6px;overflow:hidden}
+.lang button{
+  font:700 13px/1 'Montserrat',sans-serif;letter-spacing:.08em;
+  background:none;border:0;color:var(--muted);padding:9px 11px;cursor:pointer;
+  transition:color 150ms,background-color 150ms;
 }
-@media (prefers-reduced-motion:reduce){.dot{animation:none}*{transition:none!important}}
+.lang button:hover{color:var(--ink)}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.top .cta{font-weight:700;font-size:15px;text-decoration:none;color:var(--ink);transition:color 150ms}
+.top .cta:hover{color:var(--accent)}
+@media (max-width:560px){ .top .cta{display:none} }
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--faint)}
+.hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:40% 50%}
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:1;
+  background:rgba(0,0,0,.55);
+}
+@media (min-width:900px){
+  .hero::before{background:linear-gradient(90deg,rgba(0,0,0,.55) 0,rgba(0,0,0,.55) 52%,rgba(0,0,0,0) 72%)}
+}
+.hero .wrap{position:relative;z-index:2;padding-top:clamp(56px,10vw,120px);padding-bottom:clamp(56px,9vw,112px)}
+.hero__copy{max-width:600px}
+h1{
+  margin:0;font-weight:900;letter-spacing:-.02em;line-height:1;
+  font-size:clamp(44px,9vw,92px);
+}
+h1 span{display:block}
+.lede{margin:24px 0 0;max-width:30em;font-size:18px;color:var(--muted)}
+
+/* ---------- form ---------- */
+.join{margin-top:40px;max-width:520px;scroll-margin-top:24px}
+.field{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.field label{font-weight:700;font-size:15px}
+input[type=text],select{
+  width:100%;height:56px;padding:0 16px;
+  font:500 17px 'Montserrat',sans-serif;color:var(--ink);
+  background:var(--field);border:1px solid rgba(255,255,255,.32);border-radius:6px;
+  transition:border-color 150ms;
+}
+input[type=text]::placeholder{color:rgba(255,255,255,.5)}
+input[type=text]:hover,select:hover{border-color:rgba(255,255,255,.6)}
+input[type=text]:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--error)}
+select{
+  appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:44px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;
+}
+select:invalid{color:rgba(255,255,255,.5)}
+select option{color:var(--ink);background:var(--field)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:56px;padding:0 28px;border:0;border-radius:6px;cursor:pointer;
+  font:700 17px 'Montserrat',sans-serif;text-decoration:none;
+  background:var(--accent);color:var(--bg);
+  transition:background-color 150ms,color 150ms,border-color 150ms;
+}
+.btn:hover{background:var(--accent-hover)}
+.btn[disabled]{opacity:.6;cursor:progress}
+.join .btn[type=submit]{width:100%}
+.btn--ghost{background:none;color:var(--ink);border:1px solid rgba(255,255,255,.32)}
+.btn--ghost:hover{background:none;border-color:var(--ink)}
+.error{min-height:1.6em;margin:12px 0 0;font-weight:700;font-size:15px;color:var(--error)}
+.fine{margin:8px 0 0;font-size:14px;line-height:1.55;color:var(--muted)}
+.fine a{color:var(--ink);transition:color 150ms}
+.fine a:hover{color:var(--accent)}
+.count{margin:24px 0 0;padding-top:16px;border-top:1px solid var(--faint);font-weight:700;font-size:15px}
+
+/* ---------- success ---------- */
+.done h2{margin:0;font-weight:900;letter-spacing:-.02em;line-height:1.05;font-size:clamp(32px,5vw,44px)}
+.done > p{margin:12px 0 0;color:var(--muted)}
+.linkrow{display:flex;gap:8px;margin-top:24px}
+.linkbox{
+  flex:1;min-width:0;display:flex;align-items:center;height:56px;padding:0 16px;
+  background:var(--field);border:1px solid rgba(255,255,255,.32);border-radius:6px;
+  font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.linkrow .btn{padding:0 20px;flex:none}
+.done .wa{margin-top:8px;width:100%}
+.progress{margin-top:28px}
+.bars{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.bars i{height:6px;border-radius:2px;background:var(--faint)}
+.bars i.on{background:var(--accent)}
+.progress p{margin:10px 0 0;font-weight:700;font-size:15px}
+.reset{
+  margin-top:24px;padding:0;background:none;border:0;cursor:pointer;
+  font:500 14px 'Montserrat',sans-serif;color:var(--muted);text-decoration:underline;text-underline-offset:3px;
+  transition:color 150ms;
+}
+.reset:hover{color:var(--ink)}
+
+/* ---------- what it does ---------- */
+.what{padding:clamp(72px,10vw,128px) 0;border-bottom:1px solid var(--faint)}
+.kicker{margin:0 0 40px;font-weight:700;font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.items{display:grid;gap:48px;margin:0;padding:0;list-style:none}
+.items li{border-top:1px solid var(--faint);padding-top:24px}
+.items .num{display:block;font-weight:900;font-size:15px;letter-spacing:.08em;color:var(--muted)}
+.items h3{margin:16px 0 8px;font-weight:900;letter-spacing:-.02em;line-height:1.1;font-size:clamp(26px,3vw,32px)}
+.items p{margin:0;color:var(--muted);max-width:26em}
+@media (min-width:800px){ .items{grid-template-columns:repeat(3,1fr);gap:40px} }
+
+/* ---------- referral ---------- */
+.ref{display:grid;border-bottom:1px solid var(--faint)}
+.ref__img{width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;background:#111}
+.ref__copy{padding:clamp(48px,8vw,112px) var(--gutter)}
+.ref__copy > div{max-width:520px}
+h2.ref__title{margin:0;font-weight:900;letter-spacing:-.02em;line-height:1.05;font-size:clamp(34px,5vw,56px)}
+.ref__copy p.line{margin:20px 0 32px;font-size:18px;color:var(--muted)}
+.ref__copy .fine{margin-top:20px}
+@media (min-width:900px){
+  .ref{grid-template-columns:1fr 1fr;align-items:stretch}
+  .ref__img{aspect-ratio:auto;height:100%;min-height:560px}
+  .ref__copy{display:flex;align-items:center;padding-left:clamp(48px,6vw,96px)}
+}
+
+/* ---------- footer ---------- */
+.foot{padding:40px 0 48px}
+.foot .wrap{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between}
+.foot ul{display:flex;flex-wrap:wrap;gap:12px 28px;margin:0;padding:0;list-style:none}
+.foot a{font-weight:700;font-size:15px;text-decoration:none;transition:color 150ms}
+.foot a:hover{color:var(--accent)}
+.foot small{font-size:14px;color:var(--muted)}
+
+@media (min-width:1100px){ body{font-size:18px} }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header class="top">
-    <div class="brand"><img src="logo.png" alt="" width="34" height="34"><span>SAHADA</span></div>
-    <div class="lang" role="group" aria-label="Dil / Language">
-      <button type="button" data-lang="tr" aria-pressed="true">TR</button>
-      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Sahada">
+      <img src="logo.png" alt="" width="30" height="30">
+      <span>SAHADA</span>
+    </a>
+    <nav aria-label="Site">
+      <div class="lang" role="group" aria-label="Dil / Language">
+        <button type="button" data-lang="tr" aria-pressed="true">TR</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="cta" href="#join" data-i18n="navCta">Bekleme listesine katıl</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="h1">
+    <img class="hero__img" src="aerial.webp" srcset="aerial-1280.webp 1280w, aerial.webp 2688w" sizes="100vw"
+         width="2688" height="1520" fetchpriority="high"
+         alt="Gece ışıklandırılmış yeşil bir futbol sahasının yukarıdan görünümü" data-i18n-alt="heroAlt">
+    <div class="wrap">
+      <div class="hero__copy">
+        <h1 id="h1"><span data-i18n="h1a">Saha bul.</span> <span class="accent" data-i18n="h1b">Maça çık.</span></h1>
+        <p class="lede" data-i18n="lede">İstanbul'da futbol, padel ve diğer sporlar için saha kirala, maçına oyuncu bul.</p>
+
+        <div class="join" id="join">
+          <form id="form" novalidate>
+            <div class="field">
+              <label for="contact" data-i18n="contactLabel">E-posta veya telefon</label>
+              <input type="text" id="contact" name="contact" autocomplete="email" inputmode="email"
+                     autocapitalize="off" spellcheck="false" required aria-describedby="error">
+            </div>
+            <div class="field">
+              <label for="sport" data-i18n="sportLabel">Favori sporun</label>
+              <select id="sport" name="sport" required aria-describedby="error">
+                <option value="" disabled selected data-i18n="sportPh">Bir spor seç</option>
+                <option value="football" data-i18n="s_football">Futbol</option>
+                <option value="padel" data-i18n="s_padel">Padel</option>
+                <option value="basketball" data-i18n="s_basketball">Basketbol</option>
+                <option value="tennis" data-i18n="s_tennis">Tenis</option>
+                <option value="volleyball" data-i18n="s_volleyball">Voleybol</option>
+                <option value="running" data-i18n="s_running">Koşu</option>
+                <option value="other" data-i18n="s_other">Diğer</option>
+              </select>
+            </div>
+            <input class="hp" type="text" name="website" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <button class="btn" type="submit" id="submit" data-i18n="cta">Bekleme listesine katıl</button>
+            <p class="error" id="error" role="alert"></p>
+            <p class="fine">
+              <span data-i18n="consent">Katılarak, Sahada'nın lansmanı hakkında seninle iletişime geçmemizi kabul edersin.</span>
+              <a class="privacy" href="https://heshamrahwanji.github.io/sahada-legal/privacy.html#bekleme-listesi" target="_blank" rel="noopener" data-i18n="privacy">Gizlilik Politikası</a>
+            </p>
+          </form>
+
+          <section class="done" id="done" hidden aria-labelledby="doneTitle">
+            <h2 id="doneTitle" tabindex="-1" data-i18n="doneTitle">Listedesin!</h2>
+            <p id="doneSub"></p>
+            <div class="linkrow">
+              <span class="linkbox" id="refLink"></span>
+              <button class="btn" type="button" id="copy" data-i18n="copy">Kopyala</button>
+            </div>
+            <a class="btn btn--ghost wa" id="wa" href="#" target="_blank" rel="noopener" data-i18n="whatsapp">WhatsApp'ta paylaş</a>
+            <div class="progress">
+              <div class="bars" aria-hidden="true"><i></i><i></i><i></i></div>
+              <p id="progressText"></p>
+            </div>
+            <button class="reset" type="button" id="reset" data-i18n="reset">Başka bir kişi olarak katıl</button>
+          </section>
+
+          <p class="count" id="count" aria-live="polite" data-i18n="countFirst">İlk oyunculardan biri ol</p>
+        </div>
+      </div>
     </div>
-  </header>
-
-  <!-- signup -->
-  <main id="signup">
-    <section class="hero">
-      <h1><span data-i18n="h1a">Saha bul.</span><span class="em" data-i18n="h1b">Maça çık.</span></h1>
-      <p class="sub" data-i18n="sub">İstanbul'da futbol, padel ve diğer sporlar için saha kirala, maçına oyuncu bul.</p>
-    </section>
-
-    <form id="form" novalidate>
-      <div class="full">
-        <label class="vh" for="contact" data-i18n="contactLabel">E-posta veya telefon</label>
-        <input class="field" id="contact" name="contact" type="text" autocomplete="email"
-               inputmode="email" autocapitalize="off" spellcheck="false" required
-               data-i18n-ph="contactPh" placeholder="E-posta veya telefon">
-      </div>
-      <div class="full">
-        <label class="vh" for="sport" data-i18n="sportLabel">Favori sporun</label>
-        <select class="field" id="sport" name="sport" required>
-          <option value="" disabled selected data-i18n="sportPh">Favori sporun</option>
-          <option value="football" data-i18n="s_football">Futbol</option>
-          <option value="padel" data-i18n="s_padel">Padel</option>
-          <option value="basketball" data-i18n="s_basketball">Basketbol</option>
-          <option value="tennis" data-i18n="s_tennis">Tenis</option>
-          <option value="volleyball" data-i18n="s_volleyball">Voleybol</option>
-          <option value="running" data-i18n="s_running">Koşu</option>
-          <option value="other" data-i18n="s_other">Diğer</option>
-        </select>
-      </div>
-      <!-- bots fill this; people never see it -->
-      <input class="hp" type="text" name="website" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <button class="btn full" id="submit" type="submit" data-i18n="cta">Bekleme listesine katıl</button>
-      <p class="error full" id="error" role="alert" aria-live="assertive"></p>
-      <p class="consent full">
-        <span data-i18n="consent">Katılarak, Sahada'nın lansmanı hakkında seninle iletişime geçmemizi kabul edersin.</span>
-        <a id="privacyLink" href="https://heshamrahwanji.github.io/sahada-legal/privacy.html#bekleme-listesi" target="_blank" rel="noopener" data-i18n="privacy">Gizlilik Politikası</a>
-      </p>
-    </form>
-
-    <p class="count" id="count" aria-live="polite" hidden>
-      <span class="dot" aria-hidden="true"></span><span id="countText"></span>
-    </p>
-  </main>
-
-  <!-- thank-you -->
-  <section class="done" id="done" hidden>
-    <h2 id="doneTitle" tabindex="-1" data-i18n="doneTitle">Listedesin!</h2>
-    <p id="doneSub" data-i18n="doneSub">Sahada açıldığında ilk haber alanlardan biri olacaksın.</p>
-
-    <div class="invite">
-      <h3 data-i18n="inviteTitle">3 arkadaşını davet et, ücretsiz rezervasyon kredisi kazan</h3>
-      <div class="link">
-        <code id="refLink"></code>
-        <button class="copy" id="copy" type="button" data-i18n="copy">Kopyala</button>
-      </div>
-      <div class="share">
-        <a class="wa" id="wa" href="#" target="_blank" rel="noopener">WhatsApp</a>
-        <button class="more" id="nativeShare" type="button" data-i18n="share">Paylaş</button>
-      </div>
-      <div class="progress" aria-live="polite">
-        <i></i><i></i><i></i><span id="progressText"></span>
-      </div>
-    </div>
-
-    <button class="again" id="again" type="button" data-i18n="again">Başka biri için kayıt ol</button>
   </section>
 
-  <footer>
-    <span>© Sahada · İstanbul</span>
-    <a id="ig" href="https://www.instagram.com/sahada.app/" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
-      Instagram
-    </a>
-  </footer>
-</div>
+  <section class="what" aria-labelledby="whatTitle">
+    <div class="wrap">
+      <h2 class="kicker" id="whatTitle" data-i18n="whatTitle">Sahada ne yapar</h2>
+      <ol class="items">
+        <li>
+          <span class="num">01</span>
+          <h3 data-i18n="w1t">Sahanı kirala</h3>
+          <p data-i18n="w1p">Boş saatleri gör, sahanı saniyeler içinde kirala.</p>
+        </li>
+        <li>
+          <span class="num">02</span>
+          <h3 data-i18n="w2t">Oyuncu bul</h3>
+          <p data-i18n="w2p">Kadron eksikse açık maç oluştur, yakındaki oyuncular katılsın.</p>
+        </li>
+        <li>
+          <span class="num">03</span>
+          <h3 data-i18n="w3t">Tüm sporlar</h3>
+          <p data-i18n="w3p">Futbol, padel, basketbol, tenis, voleybol.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="ref" aria-labelledby="refTitle">
+    <img class="ref__img" src="gold-900.webp" srcset="gold-900.webp 900w, gold-1600.webp 1600w"
+         sizes="(min-width:900px) 50vw, 100vw" width="1600" height="905" loading="lazy" decoding="async"
+         alt="Yeşil ve altın ışıklar önünde altın bir kupanın yakın çekimi" data-i18n-alt="goldAlt">
+    <div class="ref__copy">
+      <div>
+        <h2 class="ref__title" id="refTitle">
+          <span data-i18n="refA">3 arkadaşını davet et,</span>
+          <span class="accent" data-i18n="refEm">ücretsiz</span>
+          <span data-i18n="refB">rezervasyon kredisi kazan.</span>
+        </h2>
+        <p class="line" data-i18n="refLine">Listeye katıl, sana özel linkini paylaş.</p>
+        <a class="btn" href="#join" id="refCta" data-i18n="refCta">Bekleme listesine katıl</a>
+        <p class="fine" data-i18n="refFine">Davetler doğrulandıktan sonra kredi lansmanda hesabına tanımlanır.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <ul>
+      <li><a href="https://www.instagram.com/sahada.app/" target="_blank" rel="noopener">Instagram</a></li>
+      <li><a class="privacy" href="https://heshamrahwanji.github.io/sahada-legal/privacy.html#bekleme-listesi" target="_blank" rel="noopener" data-i18n="privacy">Gizlilik Politikası</a></li>
+      <li><a href="mailto:support@sahada.app">support@sahada.app</a></li>
+    </ul>
+    <small>© 2026 Sahada</small>
+  </div>
+</footer>
 
 <script>
 (function () {
@@ -243,62 +324,85 @@ footer svg{width:20px;height:20px}
 
   // ---- config ----
   var SUPABASE_URL = 'https://bjcxddyezrndswqqylvg.supabase.co';
-  var SUPABASE_KEY = 'sb_publishable_UrCOnILjbzo8NL1Y0qlxxQ_lKZZOMNF'; // public key; table access is locked to the two RPCs
+  var SUPABASE_KEY = 'sb_publishable_UrCOnILjbzo8NL1Y0qlxxQ_lKZZOMNF'; // public key; table access is locked to the RPCs
+  var SITE_URL = 'https://sahada.app/';
   var COUNTER_MIN = 25;   // below this, show "be one of the first" instead of a small number
   var INVITE_GOAL = 3;
 
   var T = {
     tr: {
       title: 'Sahada — Saha bul. Maça çık.',
+      navCta: 'Bekleme listesine katıl',
       h1a: 'Saha bul.', h1b: 'Maça çık.',
-      sub: "İstanbul'da futbol, padel ve diğer sporlar için saha kirala, maçına oyuncu bul.",
-      contactLabel: 'E-posta veya telefon', contactPh: 'E-posta veya telefon',
-      sportLabel: 'Favori sporun', sportPh: 'Favori sporun',
+      lede: "İstanbul'da futbol, padel ve diğer sporlar için saha kirala, maçına oyuncu bul.",
+      heroAlt: 'Gece ışıklandırılmış yeşil bir futbol sahasının yukarıdan görünümü',
+      contactLabel: 'E-posta veya telefon',
+      sportLabel: 'Favori sporun', sportPh: 'Bir spor seç',
       s_football: 'Futbol', s_padel: 'Padel', s_basketball: 'Basketbol', s_tennis: 'Tenis',
       s_volleyball: 'Voleybol', s_running: 'Koşu', s_other: 'Diğer',
       cta: 'Bekleme listesine katıl', sending: 'Kaydediliyor…',
       consent: "Katılarak, Sahada'nın lansmanı hakkında seninle iletişime geçmemizi kabul edersin.",
       privacy: 'Gizlilik Politikası',
-      count: function (n) { return '<b>' + n + '</b> kişi listede'; },
-      countFew: 'İlk oyunculardan biri ol',
-      doneTitle: 'Listedesin!', alreadyTitle: 'Zaten listedesin',
-      doneSub: 'Sahada açıldığında ilk haber alanlardan biri olacaksın.',
-      alreadySub: 'İşte davet linkin — paylaşmaya devam et.',
-      inviteTitle: '3 arkadaşını davet et, ücretsiz rezervasyon kredisi kazan',
-      copy: 'Kopyala', copied: 'Kopyalandı', share: 'Paylaş',
+      countFirst: 'İlk oyunculardan biri ol',
+      count: function (n) { return n.toLocaleString('tr-TR') + ' kişi listede'; },
+      doneTitle: 'Listedesin!',
+      doneSub: 'Sahada açıldığında ilk haber alanlardan biri olacaksın. Linkini paylaş, 3 arkadaşın katılınca ücretsiz rezervasyon kredisi kazan.',
+      alreadySub: 'Zaten listedesin. Linkin aşağıda — paylaşmaya devam et.',
+      copy: 'Kopyala', copied: 'Kopyalandı',
+      whatsapp: "WhatsApp'ta paylaş",
+      shareText: "İstanbul'da saha kirala, maçına oyuncu bul. Sahada bekleme listesine benim linkimle katıl:",
       progress: function (n) { return n + '/' + INVITE_GOAL + ' arkadaş katıldı'; },
-      unlocked: 'Kredin hazır — davetlerin doğrulanınca lansmanda hesabına eklenecek',
-      again: 'Başka biri için kayıt ol',
-      shareText: "Sahada'ya katıldım — İstanbul'da saha bul, maça çık. Sen de gel:",
-      e_contact: 'Geçerli bir e-posta veya telefon numarası gir.',
+      unlocked: '3/3 arkadaş katıldı — davetler doğrulanınca kredin lansmanda tanımlanır.',
+      reset: 'Başka bir kişi olarak katıl',
+      whatTitle: 'Sahada ne yapar',
+      w1t: 'Sahanı kirala', w1p: 'Boş saatleri gör, sahanı saniyeler içinde kirala.',
+      w2t: 'Oyuncu bul', w2p: 'Kadron eksikse açık maç oluştur, yakındaki oyuncular katılsın.',
+      w3t: 'Tüm sporlar', w3p: 'Futbol, padel, basketbol, tenis, voleybol.',
+      goldAlt: 'Yeşil ve altın ışıklar önünde altın bir kupanın yakın çekimi',
+      refA: '3 arkadaşını davet et,', refEm: 'ücretsiz', refB: 'rezervasyon kredisi kazan.',
+      refLine: 'Listeye katıl, sana özel linkini paylaş.',
+      refCta: 'Bekleme listesine katıl', refCtaDone: 'Linkini paylaş',
+      refFine: 'Davetler doğrulandıktan sonra kredi lansmanda hesabına tanımlanır.',
+      e_contact: 'Geçerli bir e-posta ya da telefon numarası gir.',
       e_sport: 'Favori sporunu seç.',
       e_rate: 'Çok fazla deneme yapıldı. Biraz sonra tekrar dene.',
-      e_network: 'Bağlantı sorunu oldu. Tekrar dene.'
+      e_network: 'Bağlantı sorunu. Lütfen tekrar dene.'
     },
     en: {
       title: 'Sahada — Book a pitch. Find your game.',
+      navCta: 'Join the waitlist',
       h1a: 'Book a pitch.', h1b: 'Find your game.',
-      sub: 'Book football, padel and other sports venues in Istanbul and find players to join your game.',
-      contactLabel: 'Email or phone number', contactPh: 'Email or phone number',
-      sportLabel: 'Favorite sport', sportPh: 'Favorite sport',
+      lede: 'Book pitches for football, padel and more in Istanbul — and find players for your game.',
+      heroAlt: 'Top-down night view of a floodlit green football pitch',
+      contactLabel: 'Email or phone',
+      sportLabel: 'Favourite sport', sportPh: 'Choose a sport',
       s_football: 'Football', s_padel: 'Padel', s_basketball: 'Basketball', s_tennis: 'Tennis',
       s_volleyball: 'Volleyball', s_running: 'Running', s_other: 'Other',
       cta: 'Join the waitlist', sending: 'Joining…',
-      consent: 'By joining, you agree that we can contact you about the Sahada launch.',
+      consent: 'By joining, you agree that we may contact you about the Sahada launch.',
       privacy: 'Privacy Policy',
-      count: function (n) { return '<b>' + n + '</b> people already in'; },
-      countFew: 'Be one of the first players',
-      doneTitle: "You're in!", alreadyTitle: "You're already in",
-      doneSub: "You'll be one of the first to know when Sahada opens.",
-      alreadySub: 'Here is your invite link — keep sharing it.',
-      inviteTitle: 'Invite 3 friends, get free booking credit',
-      copy: 'Copy', copied: 'Copied', share: 'Share',
+      countFirst: 'Be one of the first players',
+      count: function (n) { return n.toLocaleString('en-US') + ' people on the list'; },
+      doneTitle: "You're on the list!",
+      doneSub: "You'll be among the first to know when Sahada opens. Share your link — when 3 friends join, you get free booking credit.",
+      alreadySub: "You're already on the list. Here's your link — keep sharing it.",
+      copy: 'Copy', copied: 'Copied',
+      whatsapp: 'Share on WhatsApp',
+      shareText: 'Book pitches and find players in Istanbul. Join the Sahada waitlist with my link:',
       progress: function (n) { return n + '/' + INVITE_GOAL + ' friends joined'; },
-      unlocked: "Credit unlocked — we'll add it to your account at launch once your invites are verified",
-      again: 'Sign up someone else',
-      shareText: "I just joined Sahada — book a pitch and find your game in Istanbul. Join me:",
+      unlocked: '3/3 friends joined — your credit is added at launch once your invites are verified.',
+      reset: 'Join as someone else',
+      whatTitle: 'What Sahada does',
+      w1t: 'Book a pitch', w1p: 'See open slots and book in seconds.',
+      w2t: 'Find players', w2p: 'Short a player? Open your game to people nearby.',
+      w3t: 'Every sport', w3p: 'Football, padel, basketball, tennis, volleyball.',
+      goldAlt: 'Close-up of a gold trophy against green and gold lights',
+      refA: 'Invite 3 friends, get', refEm: 'free', refB: 'booking credit.',
+      refLine: 'Join the list and share your personal link.',
+      refCta: 'Join the waitlist', refCtaDone: 'Share your link',
+      refFine: 'Credit is added at launch once your invites are verified.',
       e_contact: 'Enter a valid email or phone number.',
-      e_sport: 'Choose your favorite sport.',
+      e_sport: 'Choose your favourite sport.',
       e_rate: 'Too many attempts. Please try again in a bit.',
       e_network: 'Connection problem. Please try again.'
     }
@@ -308,43 +412,41 @@ footer svg{width:20px;height:20px}
   function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   var $ = function (id) { return document.getElementById(id); };
 
-  // ---- language (Turkish by default) ----
   var params = new URLSearchParams(location.search);
-  var lang = params.get('lang') === 'en' || params.get('lang') === 'tr' ? params.get('lang') : (load('sahada_lang') || 'tr');
+  var lang = params.get('lang') === 'en' || params.get('lang') === 'tr' ? params.get('lang') : (load('sahada_lang') === 'en' ? 'en' : 'tr');
   var state = { result: null, already: false, total: null };
 
+  // ---- referral capture: first ?ref= wins and is kept for later visits ----
+  var incomingRef = (params.get('ref') || '').trim().toUpperCase();
+  if (/^[A-Z0-9]{4,12}$/.test(incomingRef) && !load('sahada_referred_by')) store('sahada_referred_by', incomingRef);
+
+  // ---- language ----
   function applyLang(l) {
     lang = l; store('sahada_lang', l);
     var t = T[l];
     document.documentElement.lang = l;
-    $('privacyLink').hash = l === 'en' ? 'waitlist' : 'bekleme-listesi';
     document.title = t.title;
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
       var v = t[el.getAttribute('data-i18n')];
       if (typeof v === 'string') el.textContent = v;
     });
-    document.querySelectorAll('[data-i18n-ph]').forEach(function (el) {
-      el.placeholder = t[el.getAttribute('data-i18n-ph')];
-    });
+    document.querySelectorAll('[data-i18n-alt]').forEach(function (el) { el.alt = t[el.getAttribute('data-i18n-alt')]; });
+    document.querySelectorAll('a.privacy').forEach(function (a) { a.hash = l === 'en' ? 'waitlist' : 'bekleme-listesi'; });
     document.querySelectorAll('.lang button').forEach(function (b) {
       b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === l));
     });
+    if (state.result) { renderDone(); $('refCta').textContent = t.refCtaDone; }
     renderCount();
-    if (state.result) renderDone();
   }
   document.querySelectorAll('.lang button').forEach(function (b) {
     b.addEventListener('click', function () { applyLang(b.getAttribute('data-lang')); });
   });
 
-  // ---- referral capture (?ref=CODE) ----
-  var incomingRef = (params.get('ref') || '').trim().toUpperCase();
-  if (/^[A-Z0-9]{4,12}$/.test(incomingRef)) store('sahada_referred_by', incomingRef);
-
   // ---- API ----
   function rpc(fn, body) {
     return fetch(SUPABASE_URL + '/rest/v1/rpc/' + fn, {
       method: 'POST',
-      headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify(body || {})
     }).then(function (r) {
       return r.json().then(function (data) {
@@ -354,20 +456,16 @@ footer svg{width:20px;height:20px}
     });
   }
 
-  // ---- live counter ----
+  // ---- waitlist size (static text, fetched once) ----
   function renderCount() {
-    var el = $('count');
-    if (state.total === null) { el.hidden = true; return; }
-    $('countText').innerHTML = state.total >= COUNTER_MIN ? T[lang].count(state.total.toLocaleString(lang === 'tr' ? 'tr-TR' : 'en-US')) : T[lang].countFew;
-    el.hidden = false;
+    var t = T[lang];
+    $('count').textContent = state.total !== null && state.total >= COUNTER_MIN ? t.count(state.total) : t.countFirst;
   }
-  function refreshCount() {
-    rpc('launch_waitlist_count').then(function (n) { state.total = Number(n); renderCount(); }).catch(function () {});
-  }
-  refreshCount();
-  setInterval(function () { if (!document.hidden && !state.result) refreshCount(); }, 30000);
+  rpc('launch_waitlist_count').then(function (n) {
+    if (typeof n === 'number') { state.total = n; renderCount(); }
+  }).catch(function () {});
 
-  // ---- validation (mirrors the server rules) ----
+  // ---- form ----
   function looksValid(v) {
     v = v.trim();
     if (/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v)) return true;
@@ -378,8 +476,7 @@ footer svg{width:20px;height:20px}
 
   // switch the mobile keyboard to digits as soon as someone starts typing a number
   contact.addEventListener('input', function () {
-    var numeric = /^[+0-9(]/.test(contact.value);
-    contact.setAttribute('inputmode', numeric ? 'tel' : 'email');
+    contact.setAttribute('inputmode', /^[+0-9(]/.test(contact.value) ? 'tel' : 'email');
     contact.removeAttribute('aria-invalid');
     errorEl.textContent = '';
   });
@@ -395,6 +492,9 @@ footer svg{width:20px;height:20px}
       p_contact: c, p_sport: s, p_ref: load('sahada_referred_by'), p_lang: lang
     });
   }
+  function remember(c, s, res) {
+    store('sahada_me', JSON.stringify({ contact: c, sport: s, code: res.referral_code, invites: res.invites || 0 }));
+  }
 
   $('form').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -404,8 +504,9 @@ footer svg{width:20px;height:20px}
     if (!sport.value) return showError('e_sport', sport);
 
     btn.disabled = true; btn.textContent = T[lang].sending;
-    join(contact.value, sport.value).then(function (res) {
-      store('sahada_me', JSON.stringify({ contact: contact.value.trim(), sport: sport.value, code: res.referral_code, invites: res.invites || 0 }));
+    var c = contact.value.trim(), s = sport.value;
+    join(c, s).then(function (res) {
+      remember(c, s, res);
       showDone(res, true);
     }).catch(function (err) {
       if (err.code === 'invalid_contact') showError('e_contact', contact);
@@ -415,63 +516,59 @@ footer svg{width:20px;height:20px}
     }).then(function () { btn.disabled = false; btn.textContent = T[lang].cta; });
   });
 
-  // ---- thank-you screen ----
-  function refLink() {
-    return location.origin + location.pathname.replace(/index\.html$/, '') + '?ref=' + state.result.referral_code;
-  }
+  // ---- success state ----
+  function refLink() { return SITE_URL + '?ref=' + state.result.referral_code; }
   function renderDone() {
-    var t = T[lang], r = state.result, n = Math.min(r.invites || 0, INVITE_GOAL);
-    $('doneTitle').textContent = state.already ? t.alreadyTitle : t.doneTitle;
+    var t = T[lang], invites = state.result.invites || 0, n = Math.min(invites, INVITE_GOAL);
     $('doneSub').textContent = state.already ? t.alreadySub : t.doneSub;
-    $('refLink').textContent = refLink().replace(/^https?:\/\//, '');
+    $('refLink').textContent = refLink().replace(/^https:\/\//, '');
     $('wa').href = 'https://wa.me/?text=' + encodeURIComponent(t.shareText + ' ' + refLink());
-    document.querySelectorAll('.progress i').forEach(function (i, idx) { i.classList.toggle('on', idx < n); });
-    $('progressText').textContent = (r.invites || 0) >= INVITE_GOAL ? t.unlocked : t.progress(n);
-    $('nativeShare').hidden = !navigator.share;
-    document.querySelector('.share').classList.toggle('solo', !navigator.share);
+    document.querySelectorAll('.bars i').forEach(function (i, idx) { i.classList.toggle('on', idx < n); });
+    $('progressText').textContent = invites >= INVITE_GOAL ? t.unlocked : t.progress(n);
   }
   function showDone(res, focus) {
     state.result = res; state.already = !!res.already_joined;
-    if (typeof res.total === 'number') state.total = res.total;
-    $('signup').hidden = true; $('done').hidden = false;
+    if (typeof res.total === 'number') { state.total = res.total; renderCount(); }
+    $('form').hidden = true; $('done').hidden = false;
+    $('refCta').textContent = T[lang].refCtaDone;
     renderDone();
-    if (focus) { window.scrollTo(0, 0); $('doneTitle').focus(); }
+    if (focus) $('doneTitle').focus();
   }
 
   $('copy').addEventListener('click', function () {
     var link = refLink(), b = this;
     var ok = function () { b.textContent = T[lang].copied; setTimeout(function () { b.textContent = T[lang].copy; }, 1800); };
     if (navigator.clipboard) navigator.clipboard.writeText(link).then(ok, function () { prompt('', link); });
-    else { prompt('', link); }
+    else prompt('', link);
   });
-  $('nativeShare').addEventListener('click', function () {
-    navigator.share({ title: 'Sahada', text: T[lang].shareText, url: refLink() }).catch(function () {});
-  });
-  $('again').addEventListener('click', function () {
+  $('reset').addEventListener('click', function () {
     store('sahada_me', null);
     state.result = null;
     contact.value = ''; sport.value = '';
-    $('done').hidden = true; $('signup').hidden = false;
-    refreshCount();
+    $('done').hidden = true; $('form').hidden = false;
+    $('refCta').textContent = T[lang].refCta;
     contact.focus();
+  });
+
+  // The referral button jumps to the form (or the share link); put the cursor where it is useful.
+  $('refCta').addEventListener('click', function () {
+    setTimeout(function () { (state.result ? $('copy') : contact).focus({ preventScroll: true }); }, 0);
   });
 
   applyLang(lang);
 
-  // Returning visitor: show their link with an up-to-date invite count.
+  // ---- returning visitor: paint the saved link at once, refresh the invite count quietly ----
   var me = null; try { me = JSON.parse(load('sahada_me') || 'null'); } catch (e) {}
   if (me && me.contact && me.sport) {
-    // paint the cached link straight away, then refresh the invite count in the background
     if (me.code) showDone({ referral_code: me.code, invites: me.invites || 0, already_joined: true }, false);
-    else $('signup').hidden = true;  // older entries without a cached code: avoid flashing the form
+    else $('form').hidden = true;  // older entries without a saved code: avoid flashing the form
     join(me.contact, me.sport)
       .then(function (res) {
         res.already_joined = true;
-        me.code = res.referral_code; me.invites = res.invites || 0;
-        store('sahada_me', JSON.stringify(me));
+        remember(me.contact, me.sport, res);
         showDone(res, false);
       })
-      .catch(function () { if (!me.code) $('signup').hidden = false; });
+      .catch(function () { if (!me.code) $('form').hidden = false; });
   }
 })();
 </script>
